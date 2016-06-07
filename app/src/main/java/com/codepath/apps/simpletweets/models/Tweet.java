@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 //@Table(name = "Tweets")
-@Parcel(analyze={Tweet.class, User.class})
+@Parcel(analyze = {Tweet.class, User.class})
 public class Tweet {
     //@Column(name = "tweetId", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private long tweetId;
@@ -69,12 +69,24 @@ public class Tweet {
         String relativeDate = "";
         try {
             long dateMillis = sf.parse(timestamp).getTime();
-            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
-                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
-        } catch (ParseException e) {
+            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+            return formatRelativeDate(relativeDate);
+        }
+        catch (ParseException e) {
             Log.e("ERROR", "Error parsing timestamp");
         }
 
         return relativeDate;
+    }
+
+    private String formatRelativeDate(String date) {
+        String[] split = date.split(" ");
+        if (split.length == 3) {
+            String unit = split[1];
+            if (unit.startsWith("second") || unit.startsWith("minute") || unit.startsWith("hour") || unit.startsWith("day")) {
+                return split[0] + unit.charAt(0);
+            }
+        }
+        return date;
     }
 }

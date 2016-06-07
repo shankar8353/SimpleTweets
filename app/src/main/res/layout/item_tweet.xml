@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         tools:text="User"
         android:id="@+id/tvComposeUser"
-        android:paddingRight="2dp"
+        android:paddingRight="10dp"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/ivComposeProfile"
         android:layout_toEndOf="@+id/ivComposeProfile"
@@ -43,16 +43,18 @@
         android:layout_height="wrap_content"
         android:text="Screen Name"
         android:id="@+id/tvComposeScreenName"
-        android:paddingRight="2dp"
+        android:paddingRight="10dp"
         android:layout_above="@+id/tvText"
         android:layout_toRightOf="@+id/tvComposeUser"
-        android:layout_toEndOf="@+id/tvComposeUser"/>
+        android:layout_toEndOf="@+id/tvComposeUser"
+        android:textColor="@color/colorGrey"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Rel Time"
         android:id="@+id/tvRelTime"
+        android:textColor="@color/colorGrey"
         android:layout_toRightOf="@+id/tvComposeScreenName"
         android:layout_toEndOf="@+id/tvComposeScreenName"/>
 </RelativeLayout>
