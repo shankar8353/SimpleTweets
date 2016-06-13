@@ -79,11 +79,19 @@
         android:layout_toRightOf="@+id/tvFollowing"
         android:layout_toEndOf="@+id/tvFollowing"/>
 
+    <View
+        android:id="@+id/idSpace"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/labelFollowers"
+        android:background="@android:color/black" />
+
     <FrameLayout
         android:id="@+id/flContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tvFollowers"
+        android:layout_below="@+id/idSpace"
+        android:paddingTop="1dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
     </FrameLayout>
