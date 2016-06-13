@@ -3,6 +3,7 @@ package com.codepath.apps.simpletweets.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,6 +38,8 @@ public class ProfileActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String screenName = intent.getStringExtra("screenName");
 
+        final ActionBar menu = getSupportActionBar();
+
         TwitterApplication.getRestClient().getUser(screenName, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -46,6 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 User user = TwitterResponseMapper.mapUser(responseString);
+                menu.setTitle("@" + user.getScreenName());
                 show(user);
             }
         });

@@ -10,42 +10,49 @@
     android:paddingRight="16dp"
     android:paddingBottom="16dp">
 
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:id="@+id/ivProfile"
-        tools:src="@drawable/ic_launcher"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:paddingRight="5dp"
-        android:paddingBottom="5dp" />
+    <RelativeLayout
+        android:id="@+id/rlHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="User"
-        android:id="@+id/tvProfileUser"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/ivProfile"
-        android:layout_toEndOf="@+id/ivProfile"
-        android:textStyle="bold" />
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/ivProfile"
+            tools:src="@drawable/ic_launcher"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Tagline"
-        android:id="@+id/tvTagline"
-        android:layout_below="@+id/tvProfileUser"
-        android:layout_toRightOf="@+id/ivProfile"
-        android:layout_toEndOf="@+id/ivProfile"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="User"
+            android:id="@+id/tvProfileUser"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/ivProfile"
+            android:layout_toEndOf="@+id/ivProfile"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Tagline"
+            android:id="@+id/tvTagline"
+            android:layout_below="@+id/tvProfileUser"
+            android:layout_toRightOf="@+id/ivProfile"
+            android:layout_toEndOf="@+id/ivProfile"/>
+
+    </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="22"
         android:id="@+id/tvFollowers"
-        android:layout_below="@+id/ivProfile"
+        android:layout_below="@+id/rlHeader"
         android:paddingRight="5dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
@@ -55,7 +62,7 @@
         android:layout_height="wrap_content"
         android:text="Followers"
         android:id="@+id/labelFollowers"
-        android:layout_below="@+id/ivProfile"
+        android:layout_below="@+id/rlHeader"
         android:paddingRight="20dp"
         android:layout_toRightOf="@+id/tvFollowers"
         android:layout_toEndOf="@+id/tvFollowers"/>
