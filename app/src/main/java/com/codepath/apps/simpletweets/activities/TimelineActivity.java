@@ -2,50 +2,35 @@ package com.codepath.apps.simpletweets.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.codepath.apps.simpletweets.R;
-import com.codepath.apps.simpletweets.TwitterApplication;
-import com.codepath.apps.simpletweets.adapters.TweetsAdapter;
+import com.codepath.apps.simpletweets.fragments.HomeTimelineFragment;
+import com.codepath.apps.simpletweets.fragments.MentionsTimelineFragment;
 import com.codepath.apps.simpletweets.models.Tweet;
-import com.codepath.apps.simpletweets.models.User;
-import com.codepath.apps.simpletweets.net.TweetResponse;
-import com.codepath.apps.simpletweets.net.TwitterClient;
-import com.codepath.apps.simpletweets.utils.EndlessRecyclerViewScrollListener;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.parceler.Parcels;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cz.msebera.android.httpclient.Header;
 
 public class TimelineActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_COMPOSE = 1;
 
-    private TwitterClient client;
-    private TweetsAdapter adapter;
-    private List<Tweet> tweets;
-    private long maxId = Long.MAX_VALUE;
-    @BindView(R.id.rvTweets) RecyclerView rvTweets;
-    @BindView(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
     @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.viewpager) ViewPager viewPager;
+    @BindView(R.id.tabs) PagerSlidingTabStrip tabStrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,78 +45,8 @@ public class TimelineActivity extends AppCompatActivity {
         menu.setLogo(R.mipmap.ic_launcher);
         menu.setDisplayUseLogoEnabled(true);
 
-        client = TwitterApplication.getRestClient();
-        tweets = new ArrayList<>();
-        adapter = new TweetsAdapter(tweets);
-        rvTweets.setAdapter(adapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        rvTweets.setLayoutManager(layoutManager);
-        rvTweets.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                populateTimeline();
-            }
-        });
-        populateTimeline();
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-                maxId = Long.MAX_VALUE;
-                populateTimeline();
-            }
-        });
-    }
-
-    private void populateTimeline() {
-        client.getHomeTimeline(maxId, new TextHttpResponseHandler() {
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String response) {
-                Type collectionType = new TypeToken<List<TweetResponse>>(){}.getType();
-                Gson gson = new GsonBuilder().create();
-                List<TweetResponse> tweetResponseList = gson.fromJson(response, collectionType);
-                addTweets(tweetResponseList);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-
-            }
-
-        });
-    }
-
-    private void addTweets(List<TweetResponse> tweetResponseList) {
-        if (maxId == Long.MAX_VALUE) {
-            tweets.clear();
-            adapter.notifyDataSetChanged();
-            swipeContainer.setRefreshing(false);
-        }
-        List<Tweet> results = new ArrayList<>(tweetResponseList.size());
-        for (TweetResponse t : tweetResponseList) {
-            Tweet tweet = new Tweet();
-            tweet.setBody(t.text);
-            tweet.setTimestamp(t.createdAt);
-            tweet.setTweetId(Long.valueOf(t.idStr));
-            User user = new User();
-            user.setUserId(Long.valueOf(t.user.idStr));
-            user.setName(t.user.name);
-            user.setScreenName(t.user.screenName);
-            user.setProfileImageUrl(t.user.profileImageUrl);
-            tweet.setUser(user);
-            results.add(tweet);
-
-            if (tweet.getTweetId() < maxId) {
-                maxId = tweet.getTweetId();
-            }
-        }
-        maxId--;
-        int currentSize = tweets.size();
-        tweets.addAll(results);
-        adapter.notifyItemRangeInserted(currentSize, tweets.size());
+        viewPager.setAdapter(new TweetsPagerAdapter(getSupportFragmentManager()));
+        tabStrip.setViewPager(viewPager);
     }
 
     @Override
@@ -153,6 +68,9 @@ public class TimelineActivity extends AppCompatActivity {
             case R.id.action_compose:
                 compose();
                 return true;
+            case R.id.miProfile:
+                onProfileView();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -168,9 +86,43 @@ public class TimelineActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_COMPOSE) {
             if (resultCode == RESULT_OK) {
                 Tweet tweet = Parcels.unwrap(data.getParcelableExtra("tweet"));
-                tweets.add(0, tweet);
-                adapter.notifyDataSetChanged();
+                // addTweet(tweet);
             }
+        }
+    }
+
+    public void onProfileView() {
+        Intent i = new Intent(this, ProfileActivity.class);
+        startActivity(i);
+    }
+
+    public class TweetsPagerAdapter extends FragmentPagerAdapter {
+
+        private final String[] TAB_TITLES = {"Home", "Mentions"};
+
+        public TweetsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            if (position == 0) {
+                return new HomeTimelineFragment();
+            }
+            else if (position == 1) {
+                return new MentionsTimelineFragment();
+            }
+            return null;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return TAB_TITLES[position];
+        }
+
+        @Override
+        public int getCount() {
+            return TAB_TITLES.length;
         }
     }
 }

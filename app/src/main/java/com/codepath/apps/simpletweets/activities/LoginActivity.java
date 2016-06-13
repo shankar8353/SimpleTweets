@@ -8,11 +8,9 @@ import android.view.View;
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.TwitterApplication;
 import com.codepath.apps.simpletweets.models.User;
-import com.codepath.apps.simpletweets.net.TweetUser;
 import com.codepath.apps.simpletweets.net.TwitterClient;
+import com.codepath.apps.simpletweets.utils.TwitterResponseMapper;
 import com.codepath.oauth.OAuthLoginActionBarActivity;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import cz.msebera.android.httpclient.Header;
@@ -46,13 +44,7 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
         TwitterApplication.getRestClient().getCurrentUser(new TextHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String response) {
-                Gson gson = new GsonBuilder().create();
-                TweetUser tweetUser = gson.fromJson(response, TweetUser.class);
-                User user = new User();
-                user.setUserId(Long.valueOf(tweetUser.idStr));
-                user.setName(tweetUser.name);
-                user.setScreenName(tweetUser.screenName);
-                user.setProfileImageUrl(tweetUser.profileImageUrl);
+                User user = TwitterResponseMapper.mapUser(response);
                 TwitterApplication.setLoggedInUser(user);
             }
 

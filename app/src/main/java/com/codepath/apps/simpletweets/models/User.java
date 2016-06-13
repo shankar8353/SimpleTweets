@@ -21,6 +21,10 @@ public class User  {
     //@Column(name = "profileImageUrl")
     private String profileImageUrl;
 
+    private String tagline;
+    private int followerCount;
+    private int followingCount;
+
     public String getName() {
         return name;
     }
@@ -51,5 +55,29 @@ public class User  {
 
     public void setProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public String getTagline() {
+        return tagline;
+    }
+
+    public void setTagline(String tagline) {
+        this.tagline = tagline;
+    }
+
+    public int getFollowerCount() {
+        return followerCount;
+    }
+
+    public void setFollowerCount(int followerCount) {
+        this.followerCount = followerCount;
+    }
+
+    public int getFollowingCount() {
+        return followingCount;
+    }
+
+    public void setFollowingCount(int followingCount) {
+        this.followingCount = followingCount;
     }
 }

@@ -67,12 +67,28 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         @BindView(R.id.tvComposeScreenName) TextView tvScreenName;
         @BindView(R.id.tvRelTime) TextView tvRelTime;
         @BindView(R.id.tvText) TextView tvText;
-        private OnItemClickListener listener;
 
-        public ViewHolder(View view, OnItemClickListener listener) {
+        public ViewHolder(final View view, final OnItemClickListener listener) {
             super(view);
-            this.listener = listener;
             ButterKnife.bind(this, view);
+
+            if (listener != null) {
+                setListener(view, listener);
+                setListener(ivProfile, listener);
+                setListener(tvUser, listener);
+                setListener(tvScreenName, listener);
+                setListener(tvRelTime, listener);
+                setListener(tvText, listener);
+            }
+        }
+
+        private void setListener(View view, final OnItemClickListener listener) {
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClick(v, getLayoutPosition());
+                }
+            });
         }
     }
 

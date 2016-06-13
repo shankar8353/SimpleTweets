@@ -42,9 +42,19 @@
                     android:scheme="oauth"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.TimelineActivity" android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".activities.TimelineActivity"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".activities.ComposeActivity">
+        <activity
+            android:name=".activities.ComposeActivity"
+            android:label="@string/compose">
+        </activity>
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:label="@string/label_profile">
+        </activity>
+        <activity android:name=".activities.TweetDetailActivity">
         </activity>
     </application>
 

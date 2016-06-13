@@ -21,6 +21,10 @@ public class Tweet {
     //@Column(name = "timestamp")
     private String timestamp;
 
+    private int retweetCount;
+
+    private int favoriteCount;
+
     //@Column(name = "user")
     private User user;
 
@@ -88,5 +92,21 @@ public class Tweet {
             }
         }
         return date;
+    }
+
+    public int getRetweetCount() {
+        return retweetCount;
+    }
+
+    public void setRetweetCount(int retweetCount) {
+        this.retweetCount = retweetCount;
+    }
+
+    public int getFavoriteCount() {
+        return favoriteCount;
+    }
+
+    public void setFavoriteCount(int favoriteCount) {
+        this.favoriteCount = favoriteCount;
     }
 }
